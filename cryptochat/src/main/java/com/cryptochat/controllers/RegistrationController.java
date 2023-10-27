@@ -19,7 +19,22 @@ public class RegistrationController {
         String username = request.getUsername();
         String password = request.getPassword();
 
-        // TODO registration logic
+        // Validate username and passwors
+        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            return "Invalid username or password";
+        }
+
+        // Check if the usernae is already registered
+        if (userService.isUserNameTaken(username)) {
+            return "Username is already taken. Please choose a different username.";
+        }
+
+        // Generate salt and hash the password
+        String salt = userService.generateSalt();
+        String hashedPassword = userService.hashPassword(password, salt);
+
+        // Register the user
+        userService.registeUser(username, hashedPassword, salt);
 
         return "User registerd sucessfully!";
     }
